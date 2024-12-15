@@ -89,7 +89,7 @@ declare module "events" {
             listener: (...args: any[]) => void,
             opts?: {
                 once: boolean;
-            },
+            }
         ): any;
     }
     interface StaticEventEmitterOptions {
@@ -99,17 +99,16 @@ declare module "events" {
     type EventMap<T> = Record<keyof T, any[]> | DefaultEventMap;
     type DefaultEventMap = [never];
     type AnyRest = [...args: any[]];
-    type Args<K, T> = T extends DefaultEventMap ? AnyRest : (
-        K extends keyof T ? T[K] : never
-    );
+    type Args<K, T> = T extends DefaultEventMap ? AnyRest : K extends keyof T ? T[K] : never;
     type Key<K, T> = T extends DefaultEventMap ? string | symbol : K | keyof T;
     type Key2<K, T> = T extends DefaultEventMap ? string | symbol : K & keyof T;
-    type Listener<K, T, F> = T extends DefaultEventMap ? F : (
-        K extends keyof T ? (
-                T[K] extends unknown[] ? (...args: T[K]) => void : never
-            )
+    type Listener<K, T, F> = T extends DefaultEventMap
+        ? F
+        : K extends keyof T
+        ? T[K] extends unknown[]
+            ? (...args: T[K]) => void
             : never
-    );
+        : never;
     type Listener1<K, T> = Listener<K, T, (...args: any[]) => void>;
     type Listener2<K, T> = Listener<K, T, Function>;
     /**
@@ -215,7 +214,7 @@ declare module "events" {
         static once(
             emitter: _NodeEventTarget,
             eventName: string | symbol,
-            options?: StaticEventEmitterOptions,
+            options?: StaticEventEmitterOptions
         ): Promise<any[]>;
         static once(emitter: _DOMEventTarget, eventName: string, options?: StaticEventEmitterOptions): Promise<any[]>;
         /**
@@ -279,7 +278,7 @@ declare module "events" {
         static on(
             emitter: NodeJS.EventEmitter,
             eventName: string,
-            options?: StaticEventEmitterOptions,
+            options?: StaticEventEmitterOptions
         ): NodeJS.AsyncIterator<any>;
         /**
          * A class method that returns the number of listeners for the given `eventName`registered on the given `emitter`.
@@ -657,7 +656,7 @@ declare module "events" {
                 setMaxListeners(n: number): this;
                 /**
                  * Returns the current max listener value for the `EventEmitter` which is either
-                 * set by `emitter.setMaxListeners(n)` or defaults to {@link defaultMaxListeners}.
+                 * set by `emitter.setMaxListeners(n)` or defaults to {@link EventEmitter.defaultMaxListeners}.
                  * @since v1.0.0
                  */
                 getMaxListeners(): number;
